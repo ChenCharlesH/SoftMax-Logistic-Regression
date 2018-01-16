@@ -9,70 +9,56 @@ def main():
     # Line might be OS dependent, change based on OS.
     mndata = MNIST('MNIST/')
     mndata.gz = True
-    images, labels = mndata.load_training()
-
-    # Only get subset of images
-    s_images = images[0:20000]   
-    s_labels = labels[0:20000] 
-
-    s_images, s_labels = getTT(s_images, s_labels)
-
-    # Convert images into numpy arrays.
-    s_images = np.array(s_images)
-    s_labels = np.array(s_labels)
+    
+    # Only get subset of images and select a subset
+    train_images, train_labels = mndata.load_training()
+    train_images = np.array(train_images[0:19999])   
+    train_labels = np.array(train_labels[0:19999]) 
+    train_images, train_labels = ut.getTT(train_images, train_labels)
 
     # Do the same for test set
-    t_images, t_labels = mndata.load_testing()
-    t_images = t_images[-2000:]
-    t_labels = t_labels[-2000:]
-    t_images, t_labels = getTT(t_images, t_labels)
-    t_images = np.array(t_images)
-    t_labels = np.array(t_labels)
+    test_images, test_labels = mndata.load_testing()
+    test_images = np.array(test_images[-2000:])
+    test_labels = np.array(test_labels[-2000:])
+    test_images, test_labels = ut.getTT(test_images, test_labels)
 
+    #1-pad the images
+    train_images = ut.padOnes(train_images)
+    test_images = ut.padOnes(test_images)
+    
     # initiate logistical regression with cross entropy
-    logreg = lr.LogReg(s_images.shape[1])
+    logreg = lr.LogReg(train_images.shape[1])
 
     # Number of iterations
     itera = 100
+    n0 = 0.01
+    T = 100
 
     # Gradient Descent
+    # finalWeights = gd.batch_gradient_descent(
+    #     train_images, # Images trained on
+    #     train_labels, # Correct labels
+    #     logreg, # Neural Network
+    #     itera, # iterations
+    #     1, # Step init
+    #     lambda t, n: n / (1 + t/itera) # Step Function
+    # )
     finalWeights = gd.batch_gradient_descent(
-        s_images, # Images trained on
-        s_labels, # Correct labels
+        train_images, # Images trained on
+        train_labels, # Correct labels
         logreg, # Neural Network
         itera, # iterations
-        1, # Step init
-        lambda t, n: n / (1 + t/itera) # Step Function
+        n0, # initial learning rate
+        T # annealing factor
     )
+    ut.showImg(finalWeights)
+    print finalWeights[1]
 
-    finalRes = logreg.run(t_images)
+    finalRes = logreg.run(test_images)
     
     # Round the results
     finalRes = np.clip(np.around(finalRes, decimals=0), 0, 1)
-    print "Error Rate: " + str(100 * error_rate(finalRes, s_labels)) + str("%")
-    
-# gets error rate of result
-def error_rate(res, givenLabel):
-    err = 0
-    for x in range(0, len(res)):
-        if res[x] != givenLabel[x]:
-            err += 1
-    
-    return ((float)(err)) / givenLabel.size
-
-# Get only twos and threes.
-def getTT(images, labels):
-    resX = []
-    resY = []
-    for x in range(0, len(labels)):
-        if labels[x] == 2:
-            resX.append(images[x])
-            resY.append(1)
-        elif labels[x] == 3:
-            resX.append(images[x])
-            resY.append(0)
-
-    return resX, resY
+    print "Error Rate: " + str(100 * ut.error_rate(finalRes, test_labels)) + str("%")
 
 if __name__ == '__main__':
     main()

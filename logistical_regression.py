@@ -13,18 +13,12 @@ class LogReg:
 
     # Requires a set evaluation function.
     def __init__(self, dim):
-        self.DIM = dim + 1
+        self.DIM = dim;
         self.w = np.zeros(self.DIM)
-        self.w[0] = 1
     
     def run(self, dataM):
-        s = dataM.shape
-        dataC = np.zeros(shape=(s[0], s[1] + 1))
-        dataC.fill(1)
-        dataC[:, 1:] = dataM
-
         # Multiply each data with each weight.
-        r = np.dot(dataC, self.w).flatten()
+        r = np.dot(dataM, self.w).flatten()
 
         # apply sigmoid
         r = ut.vect_sig(r)
