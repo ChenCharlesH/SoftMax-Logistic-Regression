@@ -50,7 +50,7 @@ def main():
     
     # Round the results
     finalRes = np.around(finalRes, decimals=0)
-    print "Error Rate: " + str(100 * error_rate(finalRes, s_labels)) + str("%")
+    print "Error Rate: " + str(100 * error_rate(finalRes, t_labels)) + str("%")
     
 # gets error rate of result
 def error_rate(res, givenLabel):
