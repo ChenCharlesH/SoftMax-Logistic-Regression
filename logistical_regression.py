@@ -27,9 +27,7 @@ class LogReg:
         r = np.dot(dataC, self.w).flatten()
 
         # apply sigmoid
-        np.apply_along_axis(ut.sig_arr, 0, r)
-        # np.apply_along_axis(lambda x: 1 if x[0] >= 0.5 else 0, 0, r)
+        r = ut.vect_sig(r)
         self.out = r
         return r
-        
 

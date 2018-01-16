@@ -13,5 +13,8 @@ def cross_entropy(T, Y):
 def avg_cross_entropy(T, Y):
     return cross_entropy(T, Y) / T.shape[0]
 
-def sig_arr(x):
-    return 1.0 / (1 + math.exp(-x[0]))
+# Clipped values due to overflow
+def sig(x):
+    return 1 / (1 + math.exp(-np.clip(x, -500, 500)))
+
+vect_sig = np.vectorize(sig)

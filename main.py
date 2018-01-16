@@ -12,8 +12,8 @@ def main():
     images, labels = mndata.load_training()
 
     # Only get subset of images
-    s_images = images[0:20000] + images[-2000:]   
-    s_labels = labels[0:20000] + labels[-2000:]   
+    s_images = images[0:20000]   
+    s_labels = labels[0:20000] 
 
     s_images, s_labels = getTT(s_images, s_labels)
 
@@ -24,8 +24,34 @@ def main():
     # initiate logistical regression with cross entropy
     logreg = lr.LogReg(s_images.shape[1])
 
-    # Gradient vector
-    gd.batch_gradient_descent(s_images, s_labels, logreg, 4)
+    # Number of iterations
+    itera = 100
+
+    # Gradient Descent
+    finalWeights = gd.batch_gradient_descent(
+        s_images, # Images trained on
+        s_labels, # Correct labels
+        logreg, # Neural Network
+        itera, # iterations
+        1, # Step init
+        lambda t, n: n / (1 + t/itera) # Step Function
+    )
+
+    finalRes = logreg.run(s_images)
+    
+    # Round the results
+    finalRes = np.clip(np.around(finalRes, decimals=0), 0, 1)
+    print finalRes
+    print "Error Rate: " + str(100 * error_rate(finalRes, s_labels)) + str("%")
+    
+# gets error rate of result
+def error_rate(res, givenLabel):
+    err = 0
+    for x in range(0, len(res)):
+        if res[x] != givenLabel[x]:
+            err += 1
+    
+    return ((float)(err)) / givenLabel.size
 
 # Get only twos and threes.
 def getTT(images, labels):
@@ -40,8 +66,6 @@ def getTT(images, labels):
             resY.append(0)
 
     return resX, resY
-
-
 
 if __name__ == '__main__':
     main()
