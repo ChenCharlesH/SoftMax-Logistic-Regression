@@ -5,12 +5,8 @@ import sys
 
 # Given data matrix
 # step given is function with argument t.
-def batch_gradient_descent(dataM, labels, neural, numIter, stepInit, step = lambda t: 1):
-    w = np.zeros(dataM.shape[1] + 1)
-
-    # Need to set first weight to 1.
-    w[0] = 1
-    neural.w = w
+def batch_gradient_descent(dataM, labels, neural, numIter, stepInit, step = lambda t, n: 1):
+    w = neural.w 
     
     n = stepInit
     # Loop through data

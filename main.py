@@ -34,6 +34,7 @@ def main():
 
     # Number of iterations
     itera = 100
+    initStep = 1
 
     # Gradient Descent
     finalWeights = gd.batch_gradient_descent(
@@ -41,14 +42,14 @@ def main():
         s_labels, # Correct labels
         logreg, # Neural Network
         itera, # iterations
-        1, # Step init
-        lambda t, n: n / (1 + t/itera) # Step Function
+        initStep, # Step init
+        lambda t, n: initStep / (1 + t/itera) # Step Function
     )
 
     finalRes = logreg.run(t_images)
     
     # Round the results
-    finalRes = np.clip(np.around(finalRes, decimals=0), 0, 1)
+    finalRes = np.around(finalRes, decimals=0)
     print "Error Rate: " + str(100 * error_rate(finalRes, s_labels)) + str("%")
     
 # gets error rate of result

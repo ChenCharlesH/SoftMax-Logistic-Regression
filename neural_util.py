@@ -15,6 +15,6 @@ def avg_cross_entropy(T, Y):
 
 # Clipped values due to overflow
 def sig(x):
-    return 1 / (1 + math.exp(-np.clip(x, -500, 500)))
+    return 1 / (1 + math.exp(-np.clip(x, -600, 600)))
 
 vect_sig = np.vectorize(sig)

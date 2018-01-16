@@ -11,12 +11,14 @@ class LogReg:
     # Weight vector
     w = np.array([])
 
-    # Requires a set evaluation function.
+    # Constructor
     def __init__(self, dim):
         self.DIM = dim + 1
         self.w = np.zeros(self.DIM)
         self.w[0] = 1
     
+    # Runs the neural net and output result
+    # saves last result in self.out
     def run(self, dataM):
         s = dataM.shape
         dataC = np.zeros(shape=(s[0], s[1] + 1))
