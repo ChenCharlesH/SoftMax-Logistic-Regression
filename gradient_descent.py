@@ -16,7 +16,7 @@ def batch_gradient_descent(dataM, labels, neural, numIter, stepInit, step = lamb
     # Loop through data
     for t in range(0, numIter):
         n = step(t, n)
-        w[1:] = np.subtract(w[1:],gradient(neural.run(dataM), labels, dataM))
+        w[1:] = np.subtract(w[1:],n * gradient(neural.run(dataM), labels, dataM))
         neural.w = w
 
     return w

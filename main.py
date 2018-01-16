@@ -21,6 +21,14 @@ def main():
     s_images = np.array(s_images)
     s_labels = np.array(s_labels)
 
+    # Do the same for test set
+    t_images, t_labels = mndata.load_testing()
+    t_images = t_images[-2000:]
+    t_labels = t_labels[-2000:]
+    t_images, t_labels = getTT(t_images, t_labels)
+    t_images = np.array(t_images)
+    t_labels = np.array(t_labels)
+
     # initiate logistical regression with cross entropy
     logreg = lr.LogReg(s_images.shape[1])
 
@@ -37,11 +45,10 @@ def main():
         lambda t, n: n / (1 + t/itera) # Step Function
     )
 
-    finalRes = logreg.run(s_images)
+    finalRes = logreg.run(t_images)
     
     # Round the results
     finalRes = np.clip(np.around(finalRes, decimals=0), 0, 1)
-    print finalRes
     print "Error Rate: " + str(100 * error_rate(finalRes, s_labels)) + str("%")
     
 # gets error rate of result
