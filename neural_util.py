@@ -22,7 +22,8 @@ def getSubset(images, labels, values):
     resX = []
     resY = []
     for i in range(0, len(values)):
-        resX.append(images[labels==values[i]])
+        mask = labels==values[i]
+        resX.append(images[mask])
         resY.append(i)
     return np.array(resX), np.array(resY)
 
@@ -52,10 +53,12 @@ def showImg(image):
 	plt.imshow(image, cmap="gray")
 	plt.show()
 
-def cross_entropy(T, Y):
+def cross_entropy(Y,T):
     res = 0
+    # math.log(min(Y))
+    # print math.log(Y.min)
     for x in range(0, T.size):
-        res += T[x] * math.log(Y[x]) + ((1 - T[x]) * math.log(1-Y[x]))
+            res += T[x] * math.log(Y[x]) + ((1 - T[x]) * math.log(1-Y[x]))
     return -res
 
 def avg_cross_entropy(T, Y):
@@ -63,7 +66,7 @@ def avg_cross_entropy(T, Y):
 
 # Clipped values due to overflow
 def sig(x):
-    return 1 / (1 + math.exp(-np.clip(x, -600, 600)))
+    return 1 / (1 + math.exp(-np.clip(x, -500, 30)))
 
 # gets error rate of result
 def error_rate(res, givenLabel):
@@ -73,5 +76,18 @@ def error_rate(res, givenLabel):
             err += 1
     
     return ((float)(err)) / givenLabel.size
+
+# error rate for non-rounded data
+def error_rate2(res, givenLabel):
+    err = 0
+    res = round(res)
+    for x in range(0, len(res)):
+        if res[x] != givenLabel[x]:
+            err += 1
+    return ((float)(err)) / givenLabel.size
+
+def round(res):
+    res = np.clip(np.around(res, decimals=0), 0, 1)
+    return res
 
 vect_sig = np.vectorize(sig)

@@ -31,34 +31,22 @@ def main():
 
     # Number of iterations
     itera = 100
-    n0 = 0.01
+    n0 = .1
     T = 100
 
     # Gradient Descent
-    # finalWeights = gd.batch_gradient_descent(
-    #     train_images, # Images trained on
-    #     train_labels, # Correct labels
-    #     logreg, # Neural Network
-    #     itera, # iterations
-    #     1, # Step init
-    #     lambda t, n: n / (1 + t/itera) # Step Function
-    # )
     finalWeights = gd.batch_gradient_descent(
         train_images, # Images trained on
         train_labels, # Correct labels
         logreg, # Neural Network
         itera, # iterations
         n0, # initial learning rate
-        T # annealing factor
+        T, # annealing factor
+        test_images,
+        test_labels
     )
-    ut.showImg(finalWeights)
-    print finalWeights[1]
 
-    finalRes = logreg.run(test_images)
-    
-    # Round the results
-    finalRes = np.clip(np.around(finalRes, decimals=0), 0, 1)
-    print "Error Rate: " + str(100 * ut.error_rate(finalRes, test_labels)) + str("%")
+    print "Error Rate: " + str(100 * ut.error_rate2(logreg.run(test_images), test_labels)) + str("%")
 
 if __name__ == '__main__':
     main()
