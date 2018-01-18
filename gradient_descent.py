@@ -21,16 +21,19 @@ def batch_gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, t
     errorTest = []
     # Loop through data
     for t in range(0, numIter):
+        numMini=10
+        size = train_images.shape[0]/numMini; 
         errorOld = ut.error_rate2(neural.run(holdout_images), holdout_labels)
         n = n0/(1+t/float(T))
-        w = np.subtract(w,n * gradient(neural.run(train_images), train_labels, train_images))
-        neural.w = w
+
+        for k in range(0,numMini):
+            w = np.subtract(w,0.2 * n * gradient(neural.run(train_images[k*size:(k+1)*size,:]), train_labels[k*size:(k+1)*size], train_images[k*size:(k+1)*size,:]))
+            neural.w = w
+            errorTrain.append(ut.avg_cross_entropy(neural.run(train_images),train_labels))
+            errorHoldout.append(ut.avg_cross_entropy(neural.run(holdout_images),holdout_labels))
+            errorTest.append(ut.avg_cross_entropy(neural.run(test_images),test_labels))
+       
         errorNew = ut.error_rate2(neural.run(holdout_images), holdout_labels)
-        errorTrain.append(ut.avg_cross_entropy(neural.run(train_images),train_labels))
-        errorHoldout.append(ut.avg_cross_entropy(neural.run(holdout_images),holdout_labels))
-        errorTest.append(ut.avg_cross_entropy(neural.run(test_images),test_labels))
-        # s = "t="+repr(t)+",n="+repr(n)+",errorOld="+repr(errorOld)+",errorNew="+repr(errorNew)
-        # print s
         if(errorNew<minError):
             minError = errorNew
             minErrorWeight = w
@@ -42,9 +45,10 @@ def batch_gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, t
             earlyStop=0
     neural.w = minErrorWeight
     w = minErrorWeight
-    plt.plot(errorTrain)
-    plt.plot(errorHoldout)
-    plt.plot(errorTest)
+    plt.plot(errorTrain,label = 'Training')
+    plt.plot(errorHoldout, label = 'Holdout')
+    plt.plot(errorTest, label = 'Test')
+    plt.legend()
     plt.show()
     return w
 

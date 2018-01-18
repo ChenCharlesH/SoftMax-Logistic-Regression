@@ -30,8 +30,8 @@ def main():
     logreg = lr.LogReg(train_images.shape[1])
 
     # Number of iterations
-    itera = 100
-    n0 = .1
+    itera = 10
+    n0 = .001
     T = 100
 
     # Gradient Descent
