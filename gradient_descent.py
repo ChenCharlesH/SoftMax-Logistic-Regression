@@ -7,8 +7,9 @@ import sys
 
 # Given data matrix
 # step given is function with argument t.
+# Uses mini-batch gradient descent.
 #def batch_gradient_descent(dataM, labels, neural, numIter, stepInit, step = lambda t: 1):
-def batch_gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_labels):
+def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_labels, regConst, normNum):
     # Set up weights.
     w = np.zeros(dataM.shape[1])
     neural.w = w
@@ -41,8 +42,20 @@ def batch_gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, t
 
         # minibatch value.
         for k in range(0,numMini):
+            # Generate batches for mini-batch.
+            batch_train_images = train_images[k*size : (k+1) * size, :]
+            batch_train_size = batch_train_images.shape[0]
+            batch_train_labels = train_labels[k*size : (k+1) * size]
+
+            # Get our output results y
+            neural_result = neural.run(batch_train_images)
+
+            # Regularization
+            # TODO: Fix the last untrained values if size % batchSize != 0.
+            J = gradient(neural_result, batch_train_labels, batch_train_images) + regConst * lx_gradient(w, batch_train_size, normNum)
+
             # Our gradient value.
-            w = np.subtract(w,0.2 * n * gradient(neural.run(train_images[k*size:(k+1)*size,:]), train_labels[k*size:(k+1)*size], train_images[k*size:(k+1)*size,:]))
+            w = np.subtract(w,0.2 * n * J)
             # Update the weights
             neural.w = w
 
@@ -76,6 +89,31 @@ def batch_gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, t
     plt.legend()
     plt.show()
     return w
+
+# l-norms helper function
+def lx_gradient(w, batch_size, t):
+    if t == 1:
+        return l1_gradient(w, batch_size)
+    return l2_gradient(w, batch_size)
+
+# Calculate the l2 gradient vector
+def l1_gradient(w, batch_size):
+    res = np.zeros(w.shape)
+    normalized = ut.vect_d_abs(w)
+    for i in range(0, batch_size):
+        np.add(normalized, res, res)
+    
+    return res
+
+
+# Calculate the l1 gradient vector.
+def l2_gradient(w, batch_size):
+    res = np.zeros(w.shape)
+    # Compound out weights for the number of iterations required.
+    for i in range(0, batch_size):
+        np.add(2 * w, res, res)
+    
+    return res
 
 
 # Calculate gradient vector

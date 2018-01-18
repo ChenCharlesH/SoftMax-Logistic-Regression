@@ -4,6 +4,9 @@ import math
 
 # File to hold all helper functions.
 
+# Calulate regularization const for L1
+
+
 # Get only twos and threes.
 def getTT(images, labels):
     resX = []
@@ -54,6 +57,7 @@ def showImg(image):
 	plt.imshow(image, cmap="gray")
 	plt.show()
 
+# Value of cross entropy.
 def cross_entropy(Y,T):
     res = 0
     # math.log(min(Y))
@@ -87,8 +91,19 @@ def error_rate2(res, givenLabel):
             err += 1
     return ((float)(err)) / givenLabel.size
 
+# Custum round function to round by clipping.
 def round(res):
     res = np.clip(np.around(res, decimals=0), 0, 1)
     return res
 
+# Custom function to find derivative of absolute value function
+def d_abs(x):
+    if x==0:
+        return 0
+    return abs(x) / x
+
+# Vectorized version of the sigma function.
 vect_sig = np.vectorize(sig)
+
+# Vectorized version of the derivative of the absolute value function.
+vect_d_abs = np.vectorize(d_abs)

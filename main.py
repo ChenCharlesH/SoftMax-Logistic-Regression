@@ -34,8 +34,14 @@ def main():
     n0 = .001
     T = 100
 
+    # Regularization constant. Set to zero for normal batch gradient descent.
+    regConst = 0.01
+
+    # Norm used for regularization 1 or 2 only.
+    normReg = 2
+
     # Gradient Descent
-    finalWeights = gd.batch_gradient_descent(
+    finalWeights = gd.gradient_descent(
         train_images, # Images trained on
         train_labels, # Correct labels
         logreg, # Neural Network
@@ -43,7 +49,9 @@ def main():
         n0, # initial learning rate
         T, # annealing factor
         test_images,
-        test_labels
+        test_labels,
+        regConst,
+        normReg
     )
 
     print "Error Rate: " + str(100 * ut.error_rate2(logreg.run(test_images), test_labels)) + str("%")
