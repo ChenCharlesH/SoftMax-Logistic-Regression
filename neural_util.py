@@ -27,6 +27,7 @@ def getSubset(images, labels, values):
         resY.append(i)
     return np.array(resX), np.array(resY)
 
+# Splits the labels and images into fractions for divisons.
 def getHoldout(images, labels, fraction):
 	s = images.shape[0]
 	randomVal = np.random.rand(s)

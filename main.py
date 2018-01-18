@@ -29,8 +29,8 @@ def main():
     # initiate logistical regression with cross entropy
     logreg = lr.LogReg(train_images.shape[1])
 
-    # Number of iterations
-    itera = 10
+    # Number of iterations (Upper bound before holdout)
+    itera = 1000
     n0 = .001
     T = 100
 
