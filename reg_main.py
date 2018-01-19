@@ -70,7 +70,6 @@ def main():
         
         plt.plot([math.log(n,10) if n!= 0 else 0 for n in norms], corrResults, label = "lambda")
         plt.legend()
-        plt.savefig("result_n"+str(normReg)+"l"+str(regConst)+"/jpg")
         plt.show()
 
         # Save the weights as images.
@@ -87,7 +86,6 @@ def weights_as_images(weights, filename):
         for c in range(0, cols):
             axarr[r, c].imshow(reshaped[r+c])
     
-    plt.savefig(filename)
     plt.show()
 
 
