@@ -6,6 +6,23 @@ import math
 
 # Calulate regularization const for L1
 
+# Create one hot
+def toOneHot(cat, size):
+    res = []
+    for c in range(0, size):
+        if c == cat:
+           res.append(1)
+        else:
+           res.append(0)
+    
+    return np.array(res)
+
+# Convert a function from onehot to category.
+def toCat(oneHot):
+    for c in range(0, oneHot.size):
+        if oneHot[c] == 1:
+            return c
+    return -1
 
 # Get numbers in list
 # labelAs given corrspond to what labels should be assigned
@@ -31,16 +48,18 @@ def getSubset(images, labels, values):
     return np.array(resX), np.array(resY)
 
 # Splits the labels and images into fractions for divisons.
-def getHoldout(images, labels, fraction):
-	s = images.shape[0]
-	randomVal = np.random.rand(s)
-	idx = randomVal<=fraction
-	holdout_images = images[idx]
-	holdout_labels = labels[idx]
-	idx = randomVal>fraction
-	train_images = images[idx]
-	train_labels = labels[idx]
-	return train_images, train_labels, holdout_images, holdout_labels
+def getHoldout(images, labels, ohe_labels, fraction):
+    s = images.shape[0]
+    randomVal = np.random.rand(s)
+    idx = randomVal<=fraction
+    holdout_images = images[idx]
+    holdout_labels = labels[idx]
+    holdout_ohe_labels = ohe_labels[idx, :]
+    idx = randomVal>fraction
+    train_images = images[idx]
+    train_labels = labels[idx]
+    train_ohe_labels = ohe_labels[idx, :]
+    return train_images, train_labels, train_ohe_labels, holdout_images, holdout_labels, holdout_ohe_labels
 
 # 1-pad input data 
 def padOnes(images):
@@ -70,9 +89,13 @@ def cross_entropy(Y,T):
 def k_entropy(Y, T):
     res = 0
     rows = Y.shape[0]
+
     for r in range(0, rows):
-        for v in range(0, T.size):
-            res += T[v] * math.log(Y[r][v])
+        for v in range(0, T.shape[0]):
+            # if 0 for some reason, set it really close
+            if Y[r,v] == 0.0:
+                Y[r,v] = 0.00001
+            res += T[v,r] * math.log(Y[r,v])
     return res
 
 def k_avg_entropy(Y, T):

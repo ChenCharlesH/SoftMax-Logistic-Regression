@@ -30,7 +30,7 @@ def main():
     isLog = True
 
     # Regularization constant. Set to zero for normal batch gradient descent.
-    regConst = 0.00001
+    regConst = 0.0
 
     # Norm used for regularization 1 or 2 only.
     normReg = 2

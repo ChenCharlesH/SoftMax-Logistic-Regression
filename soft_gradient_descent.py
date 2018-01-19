@@ -18,6 +18,19 @@ def gradient_descent(dataM, labels, classes, neural, numIter, n0, T, test_images
     W = np.array(tempW)
     neural.W = W
 
+    # Setup the Training encoding
+    train_encoding = []
+    # Convert to one hot encoding
+    for c in range(0, labels.size):
+        train_encoding.append(ut.toOneHot(labels[c], len(classes)))
+    
+    ohe_labels = np.array(train_encoding)
+
+    test_encoding = []
+    for c in range(0, test_labels.size):
+        test_encoding.append(ut.toOneHot(test_labels[c], len(classes)))
+    ohe_test_labels = np.array(test_encoding)
+
     # Variable to keep track of how many epochs we have stopped
     earlyStop = 0
 
@@ -26,7 +39,7 @@ def gradient_descent(dataM, labels, classes, neural, numIter, n0, T, test_images
     minErrorWeight = 0
 
     # n = stepInit
-    train_images, train_labels, holdout_images, holdout_labels = ut.getHoldout(dataM, labels, 0.1)
+    train_images, train_labels, train_ohe_labels, holdout_images, holdout_labels, holdout_ohe_labels = ut.getHoldout(dataM, labels, ohe_labels, 0.1)
 
     # Collection data attributes
     errorTrain = []
@@ -49,7 +62,7 @@ def gradient_descent(dataM, labels, classes, neural, numIter, n0, T, test_images
             # Generate batches for mini-batch.
             batch_train_images = train_images[k*size : (k+1) * size, :]
             batch_train_size = batch_train_images.shape[0]
-            batch_train_labels = train_labels[k*size : (k+1) * size]
+            batch_train_labels = train_ohe_labels[k*size : (k+1) * size, : ]
 
             # Get our output results y
             neural_result = neural.run_all(batch_train_images)
@@ -59,19 +72,20 @@ def gradient_descent(dataM, labels, classes, neural, numIter, n0, T, test_images
             J = []
             for c in range(0, len(classes)):
                 # Split batches into class
-                J.append(gradient(neural_result[c], batch_train_images, batch_train_labels) + regConst * lx_gradient(W[c], batch_train_size, normNum))
+                J.append(gradient(neural_result[c], batch_train_images, batch_train_labels, c) + regConst * lx_gradient(W[c], batch_train_size, normNum))
 
             # Our gradient value.
             for c in range(0, len(classes)):
                 W[c] = np.subtract(W[c], 0.2 * n * np.array(J[c]))
+                print W
             # Update the weights
             neural.W = W
 
             # Log data.
             if isLog:
-                errorTrain.append(ut.k_avg_entropy(neural.run_all(train_images),train_labels))
-                errorHoldout.append(ut.k_avg_entropy(neural.run_all(holdout_images),holdout_labels))
-                errorTest.append(ut.k_avg_entropy(neural.run_all(test_images),test_labels))
+                errorTrain.append(ut.k_avg_entropy(neural.run_all(train_images), train_ohe_labels))
+                errorHoldout.append(ut.k_avg_entropy(neural.run_all(holdout_images),holdout_ohe_labels))
+                errorTest.append(ut.k_avg_entropy(neural.run_all(test_images),ohe_test_labels))
        
         # Calculate the error rate after training.
         errorNew = ut.error_rate2(neural.run(holdout_images), holdout_labels)
@@ -128,15 +142,16 @@ def l2_gradient(w, batch_size):
 
 
 # Calculate gradient vector
-def gradient(Y, T, X):
+def gradient(Y, X, T, c):
     rowNum = X.shape[0]
     colNum = X.shape[1]
 
-    diff = np.subtract(Y, T)
+    diff = np.subtract(Y, T[:, c])
     res = np.zeros(shape=(colNum, ))
     for i in range(0, rowNum):
         # Clip the results lest we overflow
         np.add(np.multiply(X[i, :], diff[i]), res, res)
+    
     return res
 
 #def updateStep(self, t, T):
