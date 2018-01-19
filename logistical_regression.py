@@ -13,7 +13,7 @@ class LogReg:
 
     # Constructor
     def __init__(self, dim):
-        self.DIM = dim;
+        self.DIM = dim
         self.w = np.zeros(self.DIM)
     
     # Runs the neural net and output result
