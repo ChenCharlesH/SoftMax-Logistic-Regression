@@ -68,7 +68,7 @@ def main():
             corrResults.append(100-err)
             print "Error Rate: " + str(err) + str("%")
         
-        plt.plot([math.log(n,10) for n in norms], corrResults, label = "lambda")
+        plt.plot([math.log(n,10) if n!= 0 else 0 for n in norms], corrResults, label = "lambda")
         plt.legend()
         plt.savefig("result_n"+str(normReg)+"l"+str(regConst)+"/jpg")
         plt.show()
