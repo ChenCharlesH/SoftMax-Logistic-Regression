@@ -31,12 +31,13 @@ def main():
     isLog = False
 
     # Norms to test
-    norms = [1000, 100, 10, 1, 0, 0.1, 0.01, 0.001, 0.0001, 0.00001]
+    norms = [1000, 100, 10, 1, 0, 0.1, 0.01, 0.001, 0.0001]
     
     for normReg in [1, 2]:
         errResults = []
         corrResults = []
         weightMag = []
+        weightHist = []
         for regConst in norms:
 
             # Gradient Descent
@@ -66,6 +67,7 @@ def main():
 
             errResults.append(err)
             corrResults.append(100-err)
+            weightHist.append(np.copy(logreg.w))
             print "Error Rate: " + str(err) + str("%")
         
         plt.plot([math.log(n,10) if n!= 0 else 0 for n in norms], corrResults, label = "lambda")
@@ -73,7 +75,7 @@ def main():
         plt.show()
 
         # Save the weights as images.
-        weights_as_images(weightMag, "rl"+str(normReg)+"n"+str(regConst)+".jpg")
+        weights_as_images(weightHist, "rl"+str(normReg)+"n"+str(regConst)+".jpg")
 
 # Save weight vectors as images
 def weights_as_images(weights, filename):
@@ -84,7 +86,7 @@ def weights_as_images(weights, filename):
     f, axarr = plt.subplots(rows, cols)
     for r in range(0, rows):
         for c in range(0, cols):
-            axarr[r, c].imshow(reshaped[r+c])
+            axarr[r, c].imshow(reshaped[r * cols +c], cmap="gray")
     
     plt.show()
 

@@ -13,8 +13,12 @@ mndata.gz = True
 def getTrainingData(numbers, assign, start, end):
     # Only get subset of images and select a subset
     train_images, train_labels = mndata.load_training()
-    train_images = train_images[start:end]   
-    train_labels = train_labels[start:end] 
+    if end == None:
+        train_images = train_images[start:]   
+        train_labels = train_labels[start:] 
+    else:
+        train_images = train_images[start:end]   
+        train_labels = train_labels[start:end] 
     train_images, train_labels = ut.getTT(train_images, train_labels, numbers, assign)
     return train_images, train_labels
 
