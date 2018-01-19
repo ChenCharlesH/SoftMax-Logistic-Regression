@@ -20,15 +20,15 @@ def main():
     logreg = lr.LogReg(train_images.shape[1])
 
     # Number of iterations (Upper bound before holdout)
-    itera = 1000
-    n0 = .001
+    itera = 1
+    n0 = .0001
     T = 100
 
     # Should we plot the errors
     isLog = True
 
     # Regularization constant. Set to zero for normal batch gradient descent.
-    regConst = 0.01
+    regConst = 0
 
     # Norm used for regularization 1 or 2 only.
     normReg = 2
