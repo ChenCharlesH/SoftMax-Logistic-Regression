@@ -58,7 +58,8 @@ def gradient_descent(dataM, labels, classes, neural, numIter, n0, T, test_images
             # TODO: Fix the last untrained values if size % batchSize != 0.
             J = []
             for c in range(0, len(classes)):
-                J.append(gradient(neural_result[c], batch_train_labels, batch_train_images) + regConst * lx_gradient(W[c], batch_train_size, normNum))
+                # Split batches into class
+                J.append(gradient(neural_result[c], batch_train_images, batch_train_labels) + regConst * lx_gradient(W[c], batch_train_size, normNum))
 
             # Our gradient value.
             for c in range(0, len(classes)):
@@ -74,6 +75,7 @@ def gradient_descent(dataM, labels, classes, neural, numIter, n0, T, test_images
        
         # Calculate the error rate after training.
         errorNew = ut.error_rate2(neural.run(holdout_images), holdout_labels)
+        print errorNew
 
         # Logic to detect if we should stop due to hold-out.
         if errorNew < minError:

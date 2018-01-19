@@ -27,7 +27,7 @@ def getSubset(images, labels, values):
     for i in range(0, len(values)):
         mask = labels==values[i]
         resX.append(images[mask])
-        resY.append(i)
+        resY.append(values[i])
     return np.array(resX), np.array(resY)
 
 # Splits the labels and images into fractions for divisons.
