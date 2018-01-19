@@ -7,17 +7,17 @@ import math
 # Calulate regularization const for L1
 
 
-# Get only twos and threes.
-def getTT(images, labels):
+# Get numbers in list
+# labelAs given corrspond to what labels should be assigned
+def getTT(images, labels, numbers = [2, 3], labelAs=[1, 0]):
     resX = []
     resY = []
-    for x in range(0, len(labels)):
-        if labels[x] == 2:
-            resX.append(images[x])
-            resY.append(1)
-        elif labels[x] == 3:
-            resX.append(images[x])
-            resY.append(0)
+    for x in range(0, len(images)):
+        for i in range(0, len(numbers)):
+            if labels[x] == numbers[i]:
+                resX.append(images[x])
+                resY.append(labelAs[i])
+                break
     return np.array(resX), np.array(resY)
 
 # Get subset of images belonging to the array passed

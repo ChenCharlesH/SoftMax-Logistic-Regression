@@ -9,7 +9,7 @@ import sys
 # step given is function with argument t.
 # Uses mini-batch gradient descent.
 #def batch_gradient_descent(dataM, labels, neural, numIter, stepInit, step = lambda t: 1):
-def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_labels, regConst, normNum):
+def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_labels, regConst, normNum, isLog):
     # Set up weights.
     w = np.zeros(dataM.shape[1])
     neural.w = w
@@ -60,9 +60,10 @@ def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_la
             neural.w = w
 
             # Log data.
-            errorTrain.append(ut.avg_cross_entropy(neural.run(train_images),train_labels))
-            errorHoldout.append(ut.avg_cross_entropy(neural.run(holdout_images),holdout_labels))
-            errorTest.append(ut.avg_cross_entropy(neural.run(test_images),test_labels))
+            if isLog:
+                errorTrain.append(ut.avg_cross_entropy(neural.run(train_images),train_labels))
+                errorHoldout.append(ut.avg_cross_entropy(neural.run(holdout_images),holdout_labels))
+                errorTest.append(ut.avg_cross_entropy(neural.run(test_images),test_labels))
        
         # Calculate the error rate after training.
         errorNew = ut.error_rate2(neural.run(holdout_images), holdout_labels)
@@ -83,11 +84,12 @@ def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_la
     w = minErrorWeight
 
     # Plot our data.
-    plt.plot(errorTrain,label = 'Training')
-    plt.plot(errorHoldout, label = 'Holdout')
-    plt.plot(errorTest, label = 'Test')
-    plt.legend()
-    plt.show()
+    if isLog:
+        plt.plot(errorTrain,label = 'Training')
+        plt.plot(errorHoldout, label = 'Holdout')
+        plt.plot(errorTest, label = 'Test')
+        plt.legend()
+        plt.show()
     return w
 
 # l-norms helper function

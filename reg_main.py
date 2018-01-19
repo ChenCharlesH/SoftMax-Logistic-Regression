@@ -2,25 +2,16 @@ import neural_util as ut
 import numpy as np
 import gradient_descent as gd
 import logistical_regression as lr
+import data as dat
 
-from mnist import MNIST
 
+# Main to house regularization testing.
 def main():
-    # Line might be OS dependent, change based on OS.
-    mndata = MNIST('MNIST/')
-    mndata.gz = True
-    
-    # Only get subset of images and select a subset
-    train_images, train_labels = mndata.load_training()
-    train_images = np.array(train_images[0:20000])   
-    train_labels = np.array(train_labels[0:20000]) 
-    train_images, train_labels = ut.getTT(train_images, train_labels)
+    # Load the training img and labels
+    train_images, train_labels = dat.getTrainingData([2,3], [1, 0], 0, 20000)
 
-    # Do the same for test set
-    test_images, test_labels = mndata.load_testing()
-    test_images = np.array(test_images[-2000:])
-    test_labels = np.array(test_labels[-2000:])
-    test_images, test_labels = ut.getTT(test_images, test_labels)
+    # Load the testing img and labels
+    test_images, test_labels = dat.getTestingData([2,3], [1, 0], -2000, None)
 
     #1-pad the images
     train_images = ut.padOnes(train_images)
@@ -33,6 +24,9 @@ def main():
     itera = 1000
     n0 = .001
     T = 100
+
+    # Should we plot the errors
+    isLog = False
 
     # Regularization constant. Set to zero for normal batch gradient descent.
     regConst = 0.01
@@ -51,7 +45,8 @@ def main():
         test_images,
         test_labels,
         regConst,
-        normReg
+        normReg,
+        isLog
     )
 
     print "Error Rate: " + str(100 * ut.error_rate2(logreg.run(test_images), test_labels)) + str("%")
