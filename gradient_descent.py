@@ -31,18 +31,19 @@ def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_la
 
     # Loop through data
     for t in range(0, numIter):
-        numMini=10
+        numMini=1000
         # Caluclate the size of the minibatch.
         size = train_images.shape[0]/numMini; 
         # Grab the error rate before training.
         errorOld = ut.error_rate2(neural.run(holdout_images), holdout_labels)
 
-        # Step size.
+        # Learning Rate
         n = n0/(1+t/float(T))
-
+        print t
         # minibatch value.
         for k in range(0,numMini):
             # Generate batches for mini-batch.
+            print k
             batch_train_images = train_images[k*size : (k+1) * size, :]
             batch_train_size = batch_train_images.shape[0]
             batch_train_labels = train_labels[k*size : (k+1) * size]
@@ -55,7 +56,7 @@ def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_la
             J = gradient(neural_result, batch_train_labels, batch_train_images) + regConst * lx_gradient(w, batch_train_size, normNum)
 
             # Our gradient value.
-            w = np.subtract(w,0.2 * n * J)
+            w = np.subtract(w, n * J / numMini)
             # Update the weights
             neural.w = w
 
@@ -85,9 +86,9 @@ def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_la
 
     # Plot our data.
     if isLog:
-        plt.plot(errorTrain,label = 'Training')
-        plt.plot(errorHoldout, label = 'Holdout')
-        plt.plot(errorTest, label = 'Test')
+        plt.plot(errorTrain,label = 'Training',linewidth=0.8)
+        plt.plot(errorHoldout, label = 'Holdout',linewidth=0.8)
+        plt.plot(errorTest, label = 'Test',linewidth=0.8)
         plt.legend()
         plt.show()
     return w
