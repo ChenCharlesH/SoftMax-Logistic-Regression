@@ -20,9 +20,16 @@ class SoftMax:
             self.W = np.array(tempW)
 
             self.classes = classAssign
-            
-        # Get the probability of the largest
+        
         def run(self, dataM):
+            res = np.matmul(dataM, self.W);
+            res = np.exp(res);
+            res_sum = res.sum(axis=1)
+            res = res / res_sum[:, np.newaxis]
+            return res
+
+        # Get the probability of the largest
+        def run2(self, dataM):
             A = []
             res = []
             # calculate each ak

@@ -137,9 +137,24 @@ def error_rate2(res, givenLabel):
             err += 1
     return ((float)(err)) / givenLabel.size
 
+def error_rate2(res, givenLabel):
+    err = 0
+    labels1 = np.argmax(res,axis=1)
+    labels2 = np.argmax(givenLabel,axis=1)
+    for x in range(0, len(res)):
+        if labels1[x] != labels2[x]:
+            err += 1
+    return ((float)(err)) / givenLabel.size
+
 # Custum round function to round by clipping.
 def round(res):
     res = np.clip(np.around(res, decimals=0), 0, 1)
+    return res
+
+def oneHotEncoding(labels):
+    res = np.zeros((labels.shape[0],10))
+    for i in range(0,len(labels)):
+        res[i,labels[i]] = 1
     return res
 
 # Custom function to find derivative of absolute value function

@@ -17,6 +17,8 @@ def main():
     #1-pad the images
     train_images = ut.padOnes(train_images)
     test_images = ut.padOnes(test_images)
+    train_labels = ut.oneHotEncoding(train_labels)
+    test_labels = ut.oneHotEncoding(test_labels)
     
     # initiate logistical regression with cross entropy
     soft = sr.SoftMax(train_images.shape[1], classes)
