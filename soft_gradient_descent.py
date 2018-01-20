@@ -31,20 +31,11 @@ def gradient_descent(dataM, labels, classes, neural, numIter, n0, T, test_images
 
     # Loop through data
     for t in range(0, numIter):
-        print t
-        numMini=1
-        # Caluclate the size of the minibatch.
-        size = train_images.shape[0]/numMini; 
-        # Grab the error rate before training.
-        errorOld = ut.error_rate2(neural.run(holdout_images), holdout_labels)
-
-        # Step size.
+        errorOld = ut.error_rate3(neural.run(holdout_images), holdout_labels)
         n = n0/(1+t/float(T))
-
-        W = W + n * gradient2(neural.run(train_images),train_labels, train_images)
-
-        # Calculate the error rate after training.
-        errorNew = ut.error_rate2(neural.run(holdout_images), holdout_labels)
+        W = W + n * gradient2(neural.run(train_images),train_labels, train_images) + n * regConst * lx_gradient(W, train_images.shape[0], normNum)
+        neural.W = W
+        errorNew = ut.error_rate3(neural.run(holdout_images), holdout_labels)
         print errorNew
 
         # Logic to detect if we should stop due to hold-out.
@@ -111,7 +102,8 @@ def gradient(Y, X, T, c):
     return res
 
 def gradient2(Y,T,X):
-    return np.matmul(X.T,np.subtract(T,Y))
+    res = np.matmul(np.transpose(X),np.subtract(T,Y))
+    return res
 
 #def updateStep(self, t, T):
 #    self.n = self.n / (1 + t/T)

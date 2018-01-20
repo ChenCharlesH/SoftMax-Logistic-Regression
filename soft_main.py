@@ -10,9 +10,13 @@ def main():
 
     # Load the training img and labels
     train_images, train_labels = dat.getTrainingData(classes, classes, 0, None)
+    #train_images = train_images[0:100,:]
+    #train_labels = train_labels[0:100]
 
     # Load the testing img and labels
     test_images, test_labels = dat.getTestingData(classes, classes, 0, None)
+    # test_images = test_images[0:100,:]
+    # test_labels = test_labels[0:100]
 
     #1-pad the images
     train_images = ut.padOnes(train_images)
@@ -25,11 +29,11 @@ def main():
 
     # Number of iterations (Upper bound before holdout)
     itera = 1000
-    n0 = .001
+    n0 = .0000000001
     T = 100
 
     # Should we plot the errors
-    isLog = True
+    isLog = False
 
     # Regularization constant. Set to zero for normal batch gradient descent.
     regConst = 0.0
@@ -53,7 +57,7 @@ def main():
         isLog
     )
 
-    print "Error Rate: " + str(100 * ut.error_rate2(soft.run(test_images), test_labels)) + str("%")
+    print "Error Rate: " + str(100 * ut.error_rate3(soft.run(test_images), test_labels)) + str("%")
 
 if __name__ == '__main__':
     main()

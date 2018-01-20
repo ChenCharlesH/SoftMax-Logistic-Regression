@@ -23,7 +23,7 @@ class SoftMax:
         
         def run(self, dataM):
             res = np.matmul(dataM, self.W);
-            res = np.exp(res);
+            res = np.exp(np.clip(res,-100,100))
             res_sum = res.sum(axis=1)
             res = res / res_sum[:, np.newaxis]
             return res
