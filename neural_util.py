@@ -47,8 +47,19 @@ def getSubset(images, labels, values):
         resY.append(values[i])
     return np.array(resX), np.array(resY)
 
+def getHoldout(images, labels, fraction):
+    s = images.shape[0]
+    randomVal = np.random.rand(s)
+    idx = randomVal<=fraction
+    holdout_images = images[idx]
+    holdout_labels = labels[idx]
+    idx = randomVal>fraction
+    train_images = images[idx]
+    train_labels = labels[idx]
+    return train_images, train_labels, holdout_images, holdout_labels
+
 # Splits the labels and images into fractions for divisons.
-def getHoldout(images, labels, ohe_labels, fraction):
+def getHoldout_OHE(images, labels, ohe_labels, fraction):
     s = images.shape[0]
     randomVal = np.random.rand(s)
     idx = randomVal<=fraction

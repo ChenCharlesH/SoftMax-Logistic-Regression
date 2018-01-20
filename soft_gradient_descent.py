@@ -39,7 +39,7 @@ def gradient_descent(dataM, labels, classes, neural, numIter, n0, T, test_images
     minErrorWeight = 0
 
     # n = stepInit
-    train_images, train_labels, train_ohe_labels, holdout_images, holdout_labels, holdout_ohe_labels = ut.getHoldout(dataM, labels, ohe_labels, 0.1)
+    train_images, train_labels, train_ohe_labels, holdout_images, holdout_labels, holdout_ohe_labels = ut.getHoldout_OHE(dataM, labels, ohe_labels, 0.1)
 
     # Collection data attributes
     errorTrain = []

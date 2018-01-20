@@ -39,11 +39,9 @@ def gradient_descent(dataM, labels, neural, numIter, n0, T, test_images, test_la
 
         # Learning Rate
         n = n0/(1+t/float(T))
-        print t
         # minibatch value.
         for k in range(0,numMini):
             # Generate batches for mini-batch.
-            print k
             batch_train_images = train_images[k*size : (k+1) * size, :]
             batch_train_size = batch_train_images.shape[0]
             batch_train_labels = train_labels[k*size : (k+1) * size]
