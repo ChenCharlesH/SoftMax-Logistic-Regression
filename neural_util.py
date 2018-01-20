@@ -98,19 +98,12 @@ def cross_entropy(Y,T):
 
 # k_cross_entropy
 def k_entropy(Y, T):
-    res = 0
-    rows = Y.shape[0]
-
-    for r in range(0, rows):
-        for v in range(0, T.shape[0]):
-            # if 0 for some reason, set it really close
-            if Y[r,v] == 0.0:
-                Y[r,v] = 0.00001
-            res += T[v,r] * math.log(Y[r,v])
+    res = np.multiply(np.log(Y),T)
+    res = -np.sum(res)
     return res
 
 def k_avg_entropy(Y, T):
-    return k_entropy(Y, T) / (Y.shape[0] * T.shape[0])
+    return k_entropy(Y, T) / (Y.size)
 
 def avg_cross_entropy(T, Y):
     return cross_entropy(T, Y) / T.shape[0]

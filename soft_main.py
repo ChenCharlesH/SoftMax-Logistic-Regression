@@ -10,13 +10,13 @@ def main():
 
     # Load the training img and labels
     train_images, train_labels = dat.getTrainingData(classes, classes, 0, None)
-    #train_images = train_images[0:100,:]
-    #train_labels = train_labels[0:100]
+    # train_images = train_images[0:500,:]
+    # train_labels = train_labels[0:500]
 
     # Load the testing img and labels
     test_images, test_labels = dat.getTestingData(classes, classes, 0, None)
-    # test_images = test_images[0:100,:]
-    # test_labels = test_labels[0:100]
+    # test_images = test_images[0:50,:]
+    # test_labels = test_labels[0:50]
 
     #1-pad the images
     train_images = ut.padOnes(train_images)
@@ -29,14 +29,14 @@ def main():
 
     # Number of iterations (Upper bound before holdout)
     itera = 1000
-    n0 = .0000000001
+    n0 = .000000001
     T = 100
 
     # Should we plot the errors
-    isLog = False
+    isLog = True
 
     # Regularization constant. Set to zero for normal batch gradient descent.
-    regConst = 0.0
+    regConst = 0.001
 
     # Norm used for regularization 1 or 2 only.
     normReg = 2
